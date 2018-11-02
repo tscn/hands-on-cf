@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cloundfoundry Hands-On</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap-simplex.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/jumbotron.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+    <div class="container">
+        <a href="../" class="navbar-brand">Cloudfoundry Hands-On</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/tscn/hands-on-cf" target="_blank">Github</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <th:block th:if="${completed != null}">
+                <div class="alert alert-dismissible alert-success col-md-12">
+                    <strong>Well done!</strong> You successfully completed this Cloudfoundry Hands-On workshop.
+                </div>
+            </th:block>
+            <div class="col-md-8">
+                <h1 th:text="${greeting}">Hello, world!</h1>
+                <p>
+                    Congratulations, you pushed your app successfully to Cloudfoundry!
+                </p>
+                <p>
+                    On the right side you can see some internal information about your running application instance.
+                    Please find below some hands-on tasks to perform with your application. Have fun!
+                </p>
+
+                <hr/>
+                <h2>&raquo; Set app environment</h2>
+                <p>
+                    The welcome headline can be customized with an environment variable.
+                    Use <mark>cf set-env <span th:text="${app.name}"></span> GREETING ' ... '</mark> to replace the <mark>Hello, world!</mark> in the headline with a customized message.
+                </p>
+                <p>
+                    To apply the new app environment, run <mark><span th:text="'cf restage ' + ${app.name}"></span></mark>, wait until the staging process finishes and refresh this page.
+                </p>
+
+                <hr/>
+                <h2>&raquo; Monitor your app</h2>
+                <p>
+                    Use <mark><span th:text="'cf app ' + ${app.name}"></span></mark> to show some information like memory and compute load of your app.
+                    You can use the "Do something" button below to generate some load.
+                </p>
+                <p>
+                    Use <mark><span th:text="'cf logs ' + ${app.name}"></span></mark> to tail the application logs or
+                    <mark><span th:text="'cf logs ' + ${app.name} + ' --recent'"></span></mark>
+                    to view recent logs of your app.
+                    Again, you can use the "Do something" button to generate logs.
+                </p>
+                <p>
+                    Use <mark><span th:text="'cf ssh ' + ${app.name}"></span></mark> to ssh into your container.
+                    (Maybe try to find the java process, kill it and see what happens.)
+                </p>
+                <p>
+                    Use <mark><span th:text="'cf events ' + ${app.name}"></span></mark> to list events for your application (e.g. starts, restarts & crashes).
+                </p>
+                <p>
+                    This app also provides a http endpoint that can be used by the runtime to monitor the app health status.
+                    To enable the health check, edit the <mark>manifest.yml</mark>, uncomment the lines with <mark>health-check-type: http</mark> and <mark>health-check-http-endpoint: /hc</mark>, save the file and run <mark>cf push</mark> again.
+                    After the app is successfully restarted, refresh this page.
+                </p>
+                <p th:if="${hc} == true">
+                    Congratulations, your app is now monitored with a http health check. Try use the "Set unhealthy" button and use <mark><span th:text="'cf app ' + ${app.name}"></span></mark>, <mark><span th:text="'cf logs ' + ${app.name} + ' --recent'"></span></mark>
+                    and <mark><span th:text="'cf events ' + ${app.name}"></span></mark> to trace what's happening.
+                </p>
+                <p>
+                    <form method="post">
+                        <button class="btn btn-success" role="button" type="submit" formaction="/do-something">Do something &raquo;</button>
+                        <button class="btn btn-primary" role="button" th:if="${hc} == true" type="submit" formaction="/set-unhealthy">Set unhealthy &raquo;</button>
+                    </form>
+                </p>
+
+                <hr/>
+                <h2>&raquo; Scale your app</h2>
+                <p>
+                    Maybe you noticed that your app became unavailable for a few seconds when it was killed or became unhealthy.
+                    To mitigate that problem - or if there is just too much traffic on your app for a single instance to handle it - you have to scale your app horizontally.
+                    Use <mark><span th:text="'cf scale ' + ${app.name} + ' -i 2'"></span></mark> to start another instance of your app.
+                </p>
+                <p>
+                    After scaling your app horizontally, refresh this page every few seconds and see if something changes to the right.
+                    Again, run <mark><span th:text="'cf app ' + ${app.name}"></span></mark>, <mark><span th:text="'cf logs ' + ${app.name} + ' --recent'"></span></mark>
+                    and <mark><span th:text="'cf events ' + ${app.name}"></span></mark> to trace what's happening. Again, use the "Do something" button below, to simulate some load.
+                </p>
+                <p>
+                    In case your application requires more memory to run properly, you can also scale vertically. You could use the CLI again to scale give your application additional memory.
+                    However, we now want to use the <mark>manifest.yml</mark> file to set both memory and the number od instances so that will not be overridden by another <mark>cf push</mark>.
+                    To scale up, edit the <mark>manifest.yml</mark>, set <mark>instances: 2</mark> and <mark>memory: 2048M</mark>, save the file and run <mark>cf push</mark> again.
+                    After the app is successfully restarted, refresh this page.
+                </p>
+                <p>
+                    <form action="/do-something-on-instance" method="post">
+                        <button class="btn btn-success" role="button" type="submit">Do something &raquo;</button>
+                    </form>
+                </p>
+
+                <hr/>
+                <h2>&raquo; Integrate services</h2>
+                <p>
+                    In the beginning we changed the greeting message with an environment variable. Unfortunately, we need to restart every time the environment variables change.
+                    As this app cannot use any persistent file storage, we would like to integrate a data service.
+                </p>
+                <p>
+                    Use <mark>cf marketplace</mark> to see which services are available in your environment.
+                    To demonstrate integration of services, we want to use Redis to store the greeting message.
+                </p>
+                <p>
+                    Use <mark>cf create-service my-service p-redis shared-vm</mark> to create a service instance.
+                    Use <mark><span th:text="'cf bind-service my-service ' + ${app.name}"></span></mark> to use the created service instance in you app.
+                    Use <mark><span th:text="'cf restart ' + ${app.name}"></span></mark> to restart your app and refresh this page to see what happens.
+                </p>
+                <th:block th:if="${redis} == true">
+                    <p>
+                        <form action="/update-message" method="post">
+                            <div class="form-group">
+                                <label class="col-form-label" for="message">Congratulations, you successfully integrated Redis into you app. Now try to set the greeting message by filling the form below.</label>
+                                <input class="form-control" placeholder="Greeting message" id="message" name="message" type="text">
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-info" role="button" type="submit">Submit &raquo;</button>
+                            </div>
+                        </form>
+                    </p>
+                </th:block>
+
+                <hr/>
+                <h2>&raquo; Update your app</h2>
+                <p>
+                    Unfortunately, there might be a bug in your app. You can check that by hitting the "Do something" button below.
+                </p>
+                <p>
+                    To resolve the bug, open the Java class <mark>com.github.tscn.cf.Controller</mark> and fix the method <mark>complete</mark>.
+                    If you're confident that you have found and fixed the bug, rebuild the app with <mark>gradlew build</mark>.
+                </p>
+                <p>
+                    To facilitate a zero-downtime deployment, we do not push the existing app.
+                    Instead, we push another app and do a blue-green-deployment by mapping and un-mapping routes.
+                </p>
+                <p>
+                    Use <mark><span th:text="'cf rename ' + ${app.name} + ' ' + ${app.name} + '-venerable'"></span></mark> to rename the existing app.
+                    Now you can push your new version with <mark>cf push --no-route</mark>.
+                    By using <mark>--no-route</mark> we can disable automatic route mapping for the app.
+                </p>
+                <p>
+                    Next, use <mark><span th:text="'cf map-route ' + ${app.name} + ' ' + ${app.domain} + ' --hostname ' + ${app.hostname}"></span></mark> to map the existing route to your new app version.
+                    Try to refresh this page multiple times and see what changes on the right. You can also try the "Do something" button below and see what happens.
+                </p>
+                <p>
+                    To disable the old app version, use <mark><span th:text="'cf unmap-route ' + ${app.name} + '-venerable ' + ${app.domain} + ' --hostname ' + ${app.hostname}"></span></mark> to stop new traffic from being routed to that app version
+                    and then stop it with <mark><span th:text="'cf stop ' + ${app.name} + '-venerable'"></span></mark>.
+                </p>
+                <p>
+                    Finally, hit the button below again and see what happens.
+                </p>
+                <p>
+                    <form action="/complete" method="post">
+                        <button class="btn btn-warning" role="button" type="submit">Do something &raquo;</button>
+                    </form>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <table class="table table-hover">
+                    <tbody>
+                    <tr class="table-active">
+                        <th scope="row">App</th>
+                        <td th:text="${app.name}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Space</th>
+                        <td th:text="${app.space}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Index</th>
+                        <td th:text="${app.index}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Memory</th>
+                        <td th:text="${app.memory}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">IP</th>
+                        <td th:text="${app.ip}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Port</th>
+                        <td th:text="${app.port}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Host IP</th>
+                        <td th:text="${app.hostIp}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Host Port</th>
+                        <td th:text="${app.hostPort}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <footer>
+        <p>&copy; github.com/tscn 2018</p>
+    </footer>
+    <!-- Bootstrap core JavaScript
+================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+            integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+            crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+            crossorigin="anonymous"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</div>
+</body>
+</html>

@@ -22,4 +22,4 @@ Login to your organization on Cloudfoundry `cf login -o <org>`.
 
 Change working directory to the cloned repository and run `cf push`. This command will run a few seconds and finally print an address. Copy this address and open it with a browser. If you can see the frontend like in the screenshot below, you successfully finished the first step of the hands-on tutorial. Read the instructions of the application to proceed with the next steps.
 
-![Screenshot](https://github.com/tscn/raw/master/docs/screenshot.png)
+![Screenshot](https://github.com/tscn/hands-on-cf/raw/master/docs/screenshot.png)

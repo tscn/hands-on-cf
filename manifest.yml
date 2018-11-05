@@ -1,9 +1,9 @@
 ---
 applications:
 - name: demo
-  memory: 2048M
-  instances: 2
+  memory: 1024M
+  instances: 1
   path: build/libs/hands-on-cf-0.0.1-SNAPSHOT.jar
   random-route: true
-  health-check-type: http
-  health-check-http-endpoint: /hc
+#  health-check-type: http
+#  health-check-http-endpoint: /hc

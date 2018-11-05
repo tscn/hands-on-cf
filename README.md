@@ -1,45 +1,25 @@
 
-# Hands-on
+# Cloudfoundry Hands-On
+
+This repository contains an application that can be used as sample app to get started with deploying, monitoring, maintaining and integrating applications on Cloudfoundry Application Runtime. 
 
 ## Prerequisites
-Bundled zip containing
-* jdk
-* git
-* cf cli
-* 30 accounts in SFP with printed account names and passwords to hand out
 
-* Demo app:
-- Spring MVC with start page at / (template from pivotal-workshop)
-- cf push
-- cf logs
-- cf scale
-- cf set-env
-- cf restart-app-instance
-- "kill" (cf ssh, if infrastructure present)
-- cf events
-- cf map-route
-- cf marketplace / create-service / bind-service
-- cf restage / restart
-- cf env (VCAP_SERVICES) -> spring cloud
-- healthchecks (tbd)
-- "make unhealthy"
+To run all the exercises in this hands-on tutorial, you will need these tools / prerequisites:
 
+* Workstation with Internet access & browser and a terminal
+* CF CLI for your OS
+* JDK 1.8 for your OS
+* Any Java or text editor of your choice
 
-* Find bug // i.e. remove throw new RuntimeException("find me")
-Alternatives:
-* cf push new version
-* blue-green-deployment with auto-pilot
+## How to use it
 
-Hands-on for Cloudfoundry app development
+Clone this repository with `git clone https://github.com/tscn/hands-on-cf`. 
 
-1. start.sping.io
-1. Open project in IntelliJ
-1. Controller Hello ABBS townhall
-1. gradlew build
-1. cf api / login / target
-1. cf push
-1. Buildpacks explained
-1. Apps Manager
-1. Routes explained
-~
+Target your Cloudfoundry environment with `cf api <url> --skip-ssl-validation`. (Insecure mode is needed if CA certificates are not installed on workstation.)
 
+Login to your organization on Cloudfoundry `cf login -o <org>`.
+
+Change working directory to the cloned repository and run `cf push`. This command will run a few seconds and finally print an address. Copy this address and open it with a browser. If you can see the frontend like in the screenshot below, you successfully finished the first step of the hands-on tutorial. Read the instructions of the application to proceed with the next steps.
+
+![Screenshot](https://github.com/tscn/raw/master/docs/screenshot.png)

@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.naming.ldap.Control;
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -88,21 +90,20 @@ public class Controller {
 
     @RequestMapping(value = "/do-something", method = RequestMethod.POST)
     public String doSomething(Model model) {
-        long delay = 3 * 1000;
-        scheduler.scheduleWithFixedDelay(new Runnable() {
+        scheduler.schedule(new Runnable() {
             @Override
             public void run() {
                 int size = ThreadLocalRandom.current().nextInt(50, 100) * 1000 * 1024;
                 int load = ThreadLocalRandom.current().nextInt(40, 80);
-                ;
-                LOG.info("Consuming {} bytes memory and {}% CPU for 60s", size, load);
+                LOG.info("Consuming {} bytes memory and {}% CPU for 60000ms", size, load);
                 char[] chars = new char[size / 2];
                 Arrays.fill(chars, 'a');
-                long start = System.currentTimeMillis();
-                while (System.currentTimeMillis() - start < 60 * 1000) {
-                    if (System.currentTimeMillis() % 100 == 0) {
+                long end = System.currentTimeMillis() + (60 * 1000);
+                while (System.currentTimeMillis() < end) {
+                    if (System.currentTimeMillis() % 1000 == 0) {
                         try {
-                            Thread.sleep(100 - load);
+                            LOG.info("Consuming {} bytes memory and {}% CPU for {}ms", size, load, end - System.currentTimeMillis());
+                            Thread.sleep(1000 - (load * 10));
                         } catch (Exception ex) {
                             // ignore
                         }
@@ -110,28 +111,27 @@ public class Controller {
                 }
                 LOG.info("Consumed {} bytes memory and {}% CPU for 60s", size, load);
             }
-        }, delay);
+        }, Instant.now().plusSeconds(3));
         LOG.info("Producing load in 3 seconds");
         return "redirect:/";
     }
 
     @RequestMapping(value = "/do-something-on-instance", method = RequestMethod.POST)
     public String doSomethingOnInstance(Model model) {
-        long delay = 3 * 1000;
-        scheduler.scheduleWithFixedDelay(new Runnable() {
+        scheduler.schedule(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i < 10; i++) {
                     try {
                         Thread.sleep(ThreadLocalRandom.current().nextInt(1, 5) * 1000);
+                        LOG.info("working on {}/{}", Controller.this.env.getName(), Controller.this.env.getIndex());
                     } catch (Exception ex) {
                         // ignore
                     }
-                    LOG.info("working on {}/{}", Controller.this.env.getName(), Controller.this.env.getIndex());
                 }
                 LOG.info("Done working on {}/{}", Controller.this.env.getName(), Controller.this.env.getIndex());
             }
-        }, delay);
+        }, Instant.now().plusSeconds(3));
         LOG.info("Starting work in 3 seconds");
         return "redirect:/";
     }

@@ -63,13 +63,11 @@
                 <h2>&raquo; Monitor your app</h2>
                 <p>
                     Use <mark><span th:text="'cf app ' + ${app.name}"></span></mark> to show some information like memory and compute load of your app.
-                    You can use the "Do something" button below to generate some load.
+                    Use <mark><span th:text="'cf logs ' + ${app.name}"></span></mark> to tail the application logs or <mark><span th:text="'cf logs ' + ${app.name} + ' --recent'"></span></mark>
+                    to view recent logs of your app.
                 </p>
                 <p>
-                    Use <mark><span th:text="'cf logs ' + ${app.name}"></span></mark> to tail the application logs or
-                    <mark><span th:text="'cf logs ' + ${app.name} + ' --recent'"></span></mark>
-                    to view recent logs of your app.
-                    Again, you can use the "Do something" button to generate logs.
+                    To demonstrate, run <mark><span th:text="'cf logs ' + ${app.name} + ' | grep -v RTR'"></span></mark> (grep will exclude router logs) to stream logs and use the "Do something" button below to generate some load. You can monitor the app load in a separate terminal with <mark><span th:text="'cf app ' + ${app.name}"></span></mark>.
                 </p>
                 <p>
                     Use <mark><span th:text="'cf ssh ' + ${app.name}"></span></mark> to ssh into your container.

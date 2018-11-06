@@ -155,8 +155,7 @@
                     If you're confident that you have found and fixed the bug, rebuild the app with <mark>gradlew build</mark>.
                 </p>
                 <p>
-                    To facilitate a zero-downtime deployment, we do not push the existing app.
-                    Instead, we push another app and do a blue-green-deployment by mapping and un-mapping routes.
+                    To facilitate a zero-downtime deployment, we do not update the existing app. Instead, we will run the old and new version side-by-side to facilitate a blue-green-deployment and shutdown the old version after migrating all the traffic to the new version.
                 </p>
                 <p>
                     Use <mark><span th:text="'cf rename ' + ${app.name} + ' ' + ${app.name} + '-venerable'"></span></mark> to rename the existing app.

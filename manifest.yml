@@ -1,9 +1,9 @@
 ---
 applications:
 - name: hands-on-app
-  memory: 1024M
-  instances: 1
+  memory: 2048M
+  instances: 2
   path: build/libs/hands-on-cf-1.0.jar
   random-route: true
-#  health-check-type: http
-#  health-check-http-endpoint: /hc
+  health-check-type: http
+  health-check-http-endpoint: /hc

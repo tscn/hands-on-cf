@@ -145,7 +145,7 @@ public class Controller {
     @RequestMapping(value = "/complete", method = RequestMethod.POST)
     public String complete(Model model) {
         defaults(model);
-        if (1 + 3 == 4) {
+        if (1 + 3 == 5) {
             model.addAttribute("completed", Boolean.TRUE);
             return "index";
         } else {

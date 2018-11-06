@@ -127,8 +127,8 @@
                     To demonstrate integration of services, we want to use Redis to store the greeting message.
                 </p>
                 <p>
-                    Use <mark>cf create-service my-service p-redis shared-vm</mark> to create a service instance.
-                    Use <mark><span th:text="'cf bind-service my-service ' + ${app.name}"></span></mark> to use the created service instance in you app.
+                    Use <mark>cf create-service p-redis shared-vm my-service</mark> to create a service instance.
+                    Use <mark><span th:text="'cf bind-service ' + ${app.name} + ' my-service'"></span></mark> to use the created service instance in you app.
                     Use <mark><span th:text="'cf restart ' + ${app.name}"></span></mark> to restart your app and refresh this page to see what happens.
                 </p>
                 <th:block th:if="${redis} == true">

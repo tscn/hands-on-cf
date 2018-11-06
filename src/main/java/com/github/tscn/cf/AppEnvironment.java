@@ -1,8 +1,11 @@
 package com.github.tscn.cf;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class AppEnvironment {
@@ -31,11 +34,8 @@ public class AppEnvironment {
     @Value("${CF_INSTANCE_PORT}")
     private int hostPort;
 
-    @Value("apps.sbxadpi.aa20.cloud")
-    private String domain;
-
-    @Value("demo")
-    private String hostname;
+    @Autowired
+    private HttpServletRequest request;
 
     public String getName() {
         return name;
@@ -70,10 +70,22 @@ public class AppEnvironment {
     }
 
     public String getDomain() {
-        return domain;
+        if (request != null) {
+            String host = request.getHeader("Host");
+            if (host != null) {
+                return host.substring(host.indexOf(".") + 1);
+            }
+        }
+        return "";
     }
 
     public String getHostname() {
-        return hostname;
+        if (request != null) {
+            String host = request.getHeader("Host");
+            if (host != null) {
+                return host.substring(0, host.indexOf("."));
+            }
+        }
+        return "";
     }
 }

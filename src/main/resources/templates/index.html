@@ -3,15 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
+    <meta name="description" content="Cloudfoundry Hands-On">
+    <meta name="author" content="tscn">
     <title>Cloundfoundry Hands-On</title>
-
-    <!-- Bootstrap core CSS -->
     <link href="css/bootstrap-simplex.min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="css/jumbotron.css" rel="stylesheet">
+    <style>
+        body{padding-top: 2rem;}
+    </style>
 </head>
 
 <body>
@@ -33,7 +31,6 @@
     </div>
 </div>
 
-<!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
     <div class="container">
         <div class="row">
@@ -110,8 +107,8 @@
                     and <mark><span th:text="'cf events ' + ${app.name}"></span></mark> to trace what's happening. Again, use the "Do something" button below, to simulate some load.
                 </p>
                 <p>
-                    In case your application requires more memory to run properly, you can also scale vertically. You could use the CLI again to scale give your application additional memory.
-                    However, we now want to use the <mark>manifest.yml</mark> file to set both memory and the number od instances so that will not be overridden by another <mark>cf push</mark>.
+                    In case your application requires more memory to run properly, you can also scale vertically. You could use the CLI again to give your application additional memory.
+                    However, we now want to use the <mark>manifest.yml</mark> file to set both memory and the number of instances so that it will not be overridden by another <mark>cf push</mark>.
                     To scale up, edit the <mark>manifest.yml</mark>, set <mark>instances: 2</mark> and <mark>memory: 2048M</mark>, save the file and run <mark>cf push</mark> again.
                     After the app is successfully restarted, refresh this page.
                 </p>
@@ -124,8 +121,8 @@
                 <hr/>
                 <h2>&raquo; Integrate services</h2>
                 <p>
-                    In the beginning we changed the greeting message with an environment variable. Unfortunately, we need to restart every time the environment variables change.
-                    As this app cannot use any persistent file storage, we would like to integrate a data service.
+                    In the beginning we changed the greeting message with an environment variable. Unfortunately, we need to restart the app every time the environment variables change.
+                    To improve this, we would like to integrate a data service.
                 </p>
                 <p>
                     Use <mark>cf marketplace</mark> to see which services are available in your environment.
@@ -231,19 +228,12 @@
     <footer>
         <p>&copy; github.com/tscn 2018</p>
     </footer>
-    <!-- Bootstrap core JavaScript
-================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
             integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
             crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
             integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
             crossorigin="anonymous"></script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </div>
 </body>
 </html>

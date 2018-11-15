@@ -23,6 +23,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item" th:unless="${#strings.isEmpty(app.appsManHref)}">
+                    <a class="nav-link" th:href="${app.appsManHref}" target="_blank">PCF Apps Manager</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="https://github.com/tscn/hands-on-cf" target="_blank">Github</a>
                 </li>
@@ -50,7 +53,7 @@
                 </p>
 
                 <hr/>
-                <h2>&raquo; Set app environment</h2>
+                <h2>1. Set app environment</h2>
                 <p>
                     The welcome headline can be customized with an environment variable.
                     Use <mark>cf set-env <span th:text="${app.name}"></span> GREETING ' ... '</mark> to replace the <mark>Hello, world!</mark> in the headline with a customized message.
@@ -60,14 +63,14 @@
                 </p>
 
                 <hr/>
-                <h2>&raquo; Monitor your app</h2>
+                <h2>2. Monitor your app</h2>
                 <p>
                     Use <mark><span th:text="'cf app ' + ${app.name}"></span></mark> to show some information like memory and compute load of your app.
-                    Use <mark><span th:text="'cf logs ' + ${app.name}"></span></mark> to tail the application logs or <mark><span th:text="'cf logs ' + ${app.name} + ' --recent'"></span></mark>
+                    Use <mark><span th:text="'cf logs ' + ${app.name}"></span></mark> to tail the application logs (hit <mark>CTRL+C</mark> to stop tailing logs) or <mark><span th:text="'cf logs ' + ${app.name} + ' --recent'"></span></mark>
                     to view recent logs of your app.
                 </p>
                 <p>
-                    To demonstrate, run <mark><span th:text="'cf logs ' + ${app.name} + ' | grep -v RTR'"></span></mark> (grep will exclude router logs) to stream logs and use the "Do something" button below to generate some load. You can monitor the app load in a separate terminal with <mark><span th:text="'cf app ' + ${app.name}"></span></mark>.
+                    To demonstrate, run <mark><span th:text="'cf logs ' + ${app.name} + ' | grep -v RTR'"></span></mark> (grep will exclude router logs) to stream logs and use the "Do something" button below to generate some load. After a few log messages appeared, you should also see the CPU usage with <mark><span th:text="'cf app ' + ${app.name}"></span></mark>.
                 </p>
                 <p>
                     Use <mark><span th:text="'cf ssh ' + ${app.name}"></span></mark> to ssh into your container.
@@ -82,8 +85,8 @@
                     After the app is successfully restarted, refresh this page.
                 </p>
                 <p th:if="${hc} == true">
-                    Congratulations, your app is now monitored with a http health check. Try use the "Set unhealthy" button and use <mark><span th:text="'cf app ' + ${app.name}"></span></mark>, <mark><span th:text="'cf logs ' + ${app.name} + ' --recent'"></span></mark>
-                    and <mark><span th:text="'cf events ' + ${app.name}"></span></mark> to trace what's happening.
+                    <b>Congratulations, your app is now monitored with a http health check. To see what happens when your app becomes unhealthy, use <mark><span th:text="'cf logs ' + ${app.name}"></span></mark>
+                        to tail the logs, hit the "Set unhealthy" button below and watch the logs to trace what's happening (might take a few seconds). Also check <mark><span th:text="'cf events ' + ${app.name}"></span></mark> to see if something happened.</b>
                 </p>
                 <p>
                     <form method="post">
@@ -93,16 +96,16 @@
                 </p>
 
                 <hr/>
-                <h2>&raquo; Scale your app</h2>
+                <h2>2. Scale your app</h2>
                 <p>
                     Maybe you noticed that your app became unavailable for a few seconds when it was killed or became unhealthy.
                     To mitigate that problem - or if there is just too much traffic on your app for a single instance to handle it - you have to scale your app horizontally.
                     Use <mark><span th:text="'cf scale ' + ${app.name} + ' -i 2'"></span></mark> to start another instance of your app.
                 </p>
                 <p>
-                    After scaling your app horizontally, refresh this page every few seconds and see if something changes to the right.
+                    After scaling your app horizontally, refresh this page every few seconds and see if something changes to the right (hint: Index and IPs should change).
                     Again, run <mark><span th:text="'cf app ' + ${app.name}"></span></mark>, <mark><span th:text="'cf logs ' + ${app.name} + ' --recent'"></span></mark>
-                    and <mark><span th:text="'cf events ' + ${app.name}"></span></mark> to trace what's happening. Again, use the "Do something" button below, to simulate some load.
+                    and <mark><span th:text="'cf events ' + ${app.name}"></span></mark> to trace what's happening. Again, you can use the "Do something" button below, to generate some logs from app instances.
                 </p>
                 <p>
                     In case your application requires more memory to run properly, you can also scale vertically. You could use the CLI again to give your application additional memory.
@@ -117,7 +120,7 @@
                 </p>
 
                 <hr/>
-                <h2>&raquo; Integrate services</h2>
+                <h2>4. Integrate services</h2>
                 <p>
                     In the beginning we changed the greeting message with an environment variable. Unfortunately, we need to restart the app every time the environment variables change.
                     To improve this, we would like to integrate a data service.
@@ -128,14 +131,14 @@
                 </p>
                 <p>
                     Use <mark>cf create-service p-redis shared-vm my-service</mark> to create a service instance.
-                    Use <mark><span th:text="'cf bind-service ' + ${app.name} + ' my-service'"></span></mark> to use the created service instance in you app.
+                    Use <mark><span th:text="'cf bind-service ' + ${app.name} + ' my-service'"></span></mark> to use the created service instance in your app.
                     Use <mark><span th:text="'cf restart ' + ${app.name}"></span></mark> to restart your app and refresh this page to see what happens.
                 </p>
                 <th:block th:if="${redis} == true">
                     <p>
                         <form action="/update-message" method="post">
                             <div class="form-group">
-                                <label class="col-form-label" for="message">Congratulations, you successfully integrated Redis into you app. Now try to set the greeting message by filling the form below.</label>
+                                <label class="col-form-label" for="message"><b>Congratulations, you successfully integrated Redis into you app. Now try to set the greeting message by filling the form below.</b></label>
                                 <input class="form-control" placeholder="Greeting message" id="message" name="message" type="text">
                             </div>
                             <div class="form-group">
@@ -146,25 +149,26 @@
                 </th:block>
 
                 <hr/>
-                <h2>&raquo; Update your app</h2>
+                <h2>5. Update your app</h2>
                 <p>
                     Unfortunately, there might be a bug in your app. You can check that by hitting the "Do something" button below.
                 </p>
                 <p>
                     To resolve the bug, open the Java class <mark>com.github.tscn.cf.Controller</mark> and fix the method <mark>complete</mark>.
-                    If you're confident that you have found and fixed the bug, rebuild the app with <mark>gradlew build</mark>.
+                    If you're confident that you have found and fixed the bug, rebuild the app with <mark>./gradlew build</mark>.
                 </p>
                 <p>
                     To facilitate a zero-downtime deployment, we do not update the existing app. Instead, we will run the old and new version side-by-side to facilitate a blue-green-deployment and shutdown the old version after migrating all the traffic to the new version.
                 </p>
                 <p>
                     Use <mark><span th:text="'cf rename ' + ${app.name} + ' ' + ${app.name} + '-venerable'"></span></mark> to rename the existing app.
+                    If you want to use Redis also in the new version, you can add <mark>&nbsp;&nbsp;services: ["my-service"]</mark> to the <mark>manifest.yml</mark>.
                     Now you can push your new version with <mark>cf push --no-route</mark>.
                     By using <mark>--no-route</mark> we can disable automatic route mapping for the app.
                 </p>
                 <p>
                     Next, use <mark><span th:text="'cf map-route ' + ${app.name} + ' ' + ${app.domain} + ' --hostname ' + ${app.hostname}"></span></mark> to map the existing route to your new app version.
-                    Try to refresh this page multiple times and see what changes on the right. You can also try the "Do something" button below and see what happens.
+                    Try to refresh this page multiple times and see what changes on the right.
                 </p>
                 <p>
                     To disable the old app version, use <mark><span th:text="'cf unmap-route ' + ${app.name} + '-venerable ' + ${app.domain} + ' --hostname ' + ${app.hostname}"></span></mark> to stop new traffic from being routed to that app version
@@ -182,7 +186,7 @@
             <div class="col-md-4">
                 <table class="table table-hover">
                     <tbody>
-                    <tr class="table-active">
+                    <tr class="table-info">
                         <th scope="row">App</th>
                         <td th:text="${app.name}"></td>
                     </tr>

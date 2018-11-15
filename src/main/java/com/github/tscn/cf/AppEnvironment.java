@@ -4,14 +4,22 @@ package com.github.tscn.cf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.MessageFormat;
 
 @Component
 public class AppEnvironment {
 
+    @Value("${vcap.application.application_id}")
+    private String guid;
+
     @Value("${vcap.application.name}")
     private String name;
+
+    @Value("${vcap.application.space_id}")
+    private String space_guid;
 
     @Value("${vcap.application.space_name}")
     private String space;
@@ -33,6 +41,12 @@ public class AppEnvironment {
 
     @Value("${CF_INSTANCE_PORT}")
     private int hostPort;
+
+    @Value("${hands-on.org.guid:}")
+    private String orgGuid;
+
+    @Value("${hands-on.apps.url:}")
+    private String appsManagerUrl;
 
     @Autowired
     private HttpServletRequest request;
@@ -87,5 +101,12 @@ public class AppEnvironment {
             }
         }
         return "";
+    }
+
+    public String getAppsManHref() {
+        if (StringUtils.isEmpty(appsManagerUrl) || StringUtils.isEmpty(orgGuid)) {
+            return "";
+        }
+        return MessageFormat.format("https://{0}/organizations/{1}/spaces/{2}/applications/{3}", appsManagerUrl, orgGuid, space_guid, guid);
     }
 }
